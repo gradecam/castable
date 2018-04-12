@@ -38,7 +38,7 @@ export class Castable {
       case 'String':
         return String(source);
       case 'Boolean':
-        return source.toString() === 'true';
+        return typeof source === 'number' ? source !== 0 : /^(t|true|y|yes)/.test(String(source));
       case 'Array':
         const elementType = Reflect.getMetadata('custom:element-type' + depth, this, propertyKey) as Function;
         const nextDepth = depth + 1;
