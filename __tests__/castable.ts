@@ -1,4 +1,4 @@
-import { cast, element, Castable } from '../lib/castable';
+import { cast, element, Castable, toBool } from '../lib/castable';
 
 class Product extends Castable {
   @cast name: string;
@@ -193,5 +193,14 @@ test('Convert expanded boolean values', () => {
   }
   for (const key of ['n', 'no', 'zero', 'f']) {
     expect(c[key]).toBe(false);
+  }
+});
+
+test('should be able to use `toBool` directly', () => {
+  for (const val of ['y', 'yes', 't', -1, 1]) {
+    expect(toBool(val)).toBe(true);
+  }
+  for (const val of ['n', 'no', 0, 'f', null, void 0]) {
+    expect(toBool(val)).toBe(false);
   }
 });

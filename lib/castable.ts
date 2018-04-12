@@ -38,7 +38,7 @@ export class Castable {
       case 'String':
         return String(source);
       case 'Boolean':
-        return typeof source === 'number' ? source !== 0 : /^(t|true|y|yes)/.test(String(source));
+        return toBool(source);
       case 'Array':
         const elementType = Reflect.getMetadata('custom:element-type' + depth, this, propertyKey) as Function;
         const nextDepth = depth + 1;
@@ -47,4 +47,12 @@ export class Castable {
         return new type(source);
     }
   }
+}
+
+/**
+ * Converts various values to a boolean.
+ * @param val value to be converted
+ */
+export function toBool(val: any): boolean {
+  return typeof val === 'number' ? val !== 0 : /^(t|true|y|yes)/.test(String(val))
 }
