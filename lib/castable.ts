@@ -23,29 +23,37 @@ export class Castable {
     Object.getOwnPropertyNames(source).forEach(propertyKey => {
       const designType = Reflect.getMetadata('design:type', this, propertyKey);
       const customType = Reflect.getMetadata('custom:type', this, propertyKey);
-      const type = customType !== undefined ? customType : designType;
-      this[propertyKey] = this.convert(source[propertyKey], propertyKey, type, 0);
+      const type = customType !== void 0 ? customType : designType;
+      this[propertyKey] = convert(source[propertyKey], type, propertyKey, 0, this);
     });
   }
+}
 
-  private convert(source: any, propertyKey: string, type: any, depth: number) {
-    if (type === undefined) {
-      return source;
-    }
-    switch (type.name) {
-      case 'Number':
-        return Number(source);
-      case 'String':
-        return String(source);
-      case 'Boolean':
-        return toBool(source);
-      case 'Array':
-        const elementType = Reflect.getMetadata('custom:element-type' + depth, this, propertyKey) as Function;
-        const nextDepth = depth + 1;
-        return (source as any[]).map(el => this.convert(el, propertyKey, elementType, nextDepth));
-      default:
-        return new type(source);
-    }
+/**
+ * Convert a value into a specific type.
+ * @param value
+ * @param type
+ * @param propertyKey
+ * @param depth
+ * @param obj
+ */
+function convert(value: any, type: any, propertyKey: string, depth: number, obj?: any) {
+  if (type === void 0) {
+    return value;
+  }
+  switch (type.name) {
+    case 'Number':
+      return Number(value);
+    case 'String':
+      return String(value);
+    case 'Boolean':
+      return toBool(value);
+    case 'Array':
+      const elementType = Reflect.getMetadata('custom:element-type' + depth, obj, propertyKey) as Function;
+      const nextDepth = depth + 1;
+      return (value as any[]).map(el => convert(el, elementType, propertyKey, nextDepth, obj));
+    default:
+      return new type(value);
   }
 }
 
@@ -54,5 +62,5 @@ export class Castable {
  * @param val value to be converted
  */
 export function toBool(val: any): boolean {
-  return typeof val === 'number' ? val !== 0 : /^(t|true|y|yes)/.test(String(val))
+  return typeof val === 'number' ? val !== 0 : /^(t|true|y|yes|on)/.test(String(val).trim().toLowerCase());
 }
