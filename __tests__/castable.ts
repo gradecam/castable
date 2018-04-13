@@ -1,4 +1,4 @@
-import { cast, element, Castable } from '../lib/castable';
+import { cast, element, Castable, toBool } from '../lib/castable';
 
 class Product extends Castable {
   @cast name: string;
@@ -10,10 +10,10 @@ class Product extends Castable {
 
 test('Convert a simple object', () => {
   const serverResponse = `{
-    "name": "Milk", 
-    "price": "200", 
-    "tax": "10", 
-    "date": "2017-10-20T06:28:08Z", 
+    "name": "Milk",
+    "price": "200",
+    "tax": "10",
+    "date": "2017-10-20T06:28:08Z",
     "onSale": "false"
   }`;
   const product = new Product(JSON.parse(serverResponse));
@@ -25,10 +25,10 @@ test('Convert a simple object', () => {
 
 test('Convert a simple object with unknown field', () => {
   const serverResponse = `{
-    "name": "Milk", 
-    "price": "200", 
-    "tax": "10", 
-    "date": "2017-10-20T06:28:08Z", 
+    "name": "Milk",
+    "price": "200",
+    "tax": "10",
+    "date": "2017-10-20T06:28:08Z",
     "onSale": "false",
     "unknown": 10
   }`;
@@ -43,16 +43,16 @@ test('Convert a simple object with unknown field', () => {
 test('Convert an object array', () => {
   const serverResponse = `[
     {
-      "name": "Milk", 
-      "price": "200", 
-      "tax": "10", 
+      "name": "Milk",
+      "price": "200",
+      "tax": "10",
       "date": "2017-10-20T06:28:08Z",
       "onSale": "true"
     },
     {
-      "name": "Water", 
-      "price": "50", 
-      "tax": "5", 
+      "name": "Water",
+      "price": "50",
+      "tax": "5",
       "date": "2017-10-25T06:28:08Z",
       "onSale": "false"
     }
@@ -150,10 +150,10 @@ test('Convert 2D object array', () => {
     @element(Array, Pair)
     arr: Pair[][];
   }
-  const s = `{ 
+  const s = `{
     "arr": [
       [ { "name": "abc", "n": "123" }, { "name": "def", "n": "999" } ],
-      [ { "name": "abc2", "n": "200" }, { "name": "def2", "n": "300" } ] 
+      [ { "name": "abc2", "n": "200" }, { "name": "def2", "n": "300" } ]
     ]
   }`;
   const c = new C(JSON.parse(s));
@@ -167,4 +167,40 @@ test('Convert 2D object array', () => {
   expect(c.arr[1][0].name).toBe('abc2');
   expect(typeof c.arr[1][0].n).toBe('number');
   expect(c.arr[1][0].n).toBe(200);
+});
+
+test('Convert expanded boolean values', () => {
+  class C extends Castable {
+    @cast y: boolean;
+    @cast yes: boolean;
+    @cast intPos: boolean;
+    @cast intNeg: boolean;
+    @cast t: boolean;
+    @cast n: boolean;
+    @cast no: boolean;
+    @cast zero: boolean;
+    @cast f: boolean;
+    @cast s: boolean;
+    @cast null: boolean;
+  }
+  const s = `{
+    "y": "y", "yes": "yes", "t": "t", "intNeg": -1, "intPos": 1,
+    "n": "n", "no": "no", "zero": 0, "f": "f", "s": "arbitrary string", "null": null
+  }`;
+  const c = new C(JSON.parse(s));
+  for (const key of ['y', 'yes', 't', 'intNeg', 'intPos']) {
+    expect(c[key]).toBe(true);
+  }
+  for (const key of ['n', 'no', 'zero', 'f']) {
+    expect(c[key]).toBe(false);
+  }
+});
+
+test('should be able to use `toBool` directly', () => {
+  for (const val of ['y', 'yes', 't', -1, 1]) {
+    expect(toBool(val)).toBe(true);
+  }
+  for (const val of ['n', 'no', 0, 'f', null, void 0]) {
+    expect(toBool(val)).toBe(false);
+  }
 });
