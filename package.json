@@ -1,9 +1,9 @@
 {
   "name": "@bitr/castable",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Castable library sanitizes dirty external data by casting all properties at run-time to the types specified at compile time.",
   "main": "dist/castable.js",
-  "types" : "dist/castable.d.ts",
+  "types": "dist/castable.d.ts",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc",
@@ -15,7 +15,12 @@
   "publishConfig": {
     "registry": "https://npm.gradecam.com/"
   },
-  "keywords": ["cast", "castable", "typescript", "decorator"],
+  "keywords": [
+    "cast",
+    "castable",
+    "typescript",
+    "decorator"
+  ],
   "repository": "https://github.com/bitrinjani/castable",
   "author": "bitrinjani <bitrinjani@gmail.com>",
   "license": "MIT",
