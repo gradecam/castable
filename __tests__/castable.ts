@@ -176,22 +176,25 @@ test('Convert expanded boolean values', () => {
     @cast intPos: boolean;
     @cast intNeg: boolean;
     @cast t: boolean;
+    @cast TRUE: boolean;
+    @cast on: boolean;
     @cast n: boolean;
     @cast no: boolean;
+    @cast off: boolean;
     @cast zero: boolean;
     @cast f: boolean;
     @cast s: boolean;
     @cast null: boolean;
   }
   const s = `{
-    "y": "y", "yes": "yes", "t": "t", "intNeg": -1, "intPos": 1,
-    "n": "n", "no": "no", "zero": 0, "f": "f", "s": "arbitrary string", "null": null
+    "y": "y", "yes": "yes", "t": "t", "intNeg": -1, "intPos": 1, "on": "on", "TRUE": "TRUE",
+    "n": "n", "no": "no", "zero": 0, "f": "f", "s": "arbitrary string", "null": null, "off": "off"
   }`;
   const c = new C(JSON.parse(s));
-  for (const key of ['y', 'yes', 't', 'intNeg', 'intPos']) {
+  for (const key of ['y', 'yes', 't', 'intNeg', 'intPos', 'on', 'TRUE']) {
     expect(c[key]).toBe(true);
   }
-  for (const key of ['n', 'no', 'zero', 'f']) {
+  for (const key of ['n', 'no', 'zero', 'f', 'null', 'off', 's']) {
     expect(c[key]).toBe(false);
   }
 });
@@ -203,4 +206,13 @@ test('should be able to use `toBool` directly', () => {
   for (const val of ['n', 'no', 0, 'f', null, void 0]) {
     expect(toBool(val)).toBe(false);
   }
+});
+
+test('should allow a property called `convert`', () => {
+  class C extends Castable {
+    @cast convert: string;
+  }
+  const s = '{"convert": "value"}';
+  const c = new C(JSON.parse(s));
+  expect(c.convert).toEqual('value');
 });
