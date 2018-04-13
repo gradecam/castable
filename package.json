@@ -12,6 +12,9 @@
     "jest": "jest --runInBand",
     "cov": "jest --coverage --runInBand"
   },
+  "publishConfig": {
+    "registry": "https://npm.gradecam.com/"
+  },
   "keywords": ["cast", "castable", "typescript", "decorator"],
   "repository": "https://github.com/bitrinjani/castable",
   "author": "bitrinjani <bitrinjani@gmail.com>",
