@@ -176,6 +176,7 @@ test('Convert expanded boolean values', () => {
     @cast intPos: boolean;
     @cast intNeg: boolean;
     @cast t: boolean;
+    @cast TRUE: boolean;
     @cast on: boolean;
     @cast n: boolean;
     @cast no: boolean;
@@ -186,14 +187,14 @@ test('Convert expanded boolean values', () => {
     @cast null: boolean;
   }
   const s = `{
-    "y": "y", "yes": "yes", "t": "t", "intNeg": -1, "intPos": 1, "on": "on",
+    "y": "y", "yes": "yes", "t": "t", "intNeg": -1, "intPos": 1, "on": "on", "TRUE": "TRUE",
     "n": "n", "no": "no", "zero": 0, "f": "f", "s": "arbitrary string", "null": null, "off": "off"
   }`;
   const c = new C(JSON.parse(s));
-  for (const key of ['y', 'yes', 't', 'intNeg', 'intPos']) {
+  for (const key of ['y', 'yes', 't', 'intNeg', 'intPos', 'on', 'TRUE']) {
     expect(c[key]).toBe(true);
   }
-  for (const key of ['n', 'no', 'zero', 'f']) {
+  for (const key of ['n', 'no', 'zero', 'f', 'null', 'off', 's']) {
     expect(c[key]).toBe(false);
   }
 });
