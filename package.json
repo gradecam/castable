@@ -1,6 +1,6 @@
 {
   "name": "@bitr/castable",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Castable library sanitizes dirty external data by casting all properties at run-time to the types specified at compile time.",
   "main": "dist/castable.js",
   "types": "dist/castable.d.ts",
